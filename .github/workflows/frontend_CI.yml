@@ -27,8 +27,6 @@ jobs:
     - name: Format
       working-directory: ./frontend/src
       run: |
-          npm ci
-          npm run format
           npm run format:check
     
     - name: Run ESLint
