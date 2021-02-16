@@ -149,8 +149,8 @@ def event_pre_save_receiver(sender, instance, *args, **kwargs):
 def event_pre_save_receiver1(sender, instance, *args, **kwargs):
     if not instance.profile:
         instance.profile = instance.profile
-    #if instance.ppo and not instance.is_accepted:
-    #    instance.is_accepted = True
+    if instance.ppo and not instance.is_accepted:
+        instance.is_accepted = True
 
 pre_save.connect(event_pre_save_receiver1, sender=InternshipOffer)
 
