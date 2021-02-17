@@ -1,12 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_delete
-import random
 from uuid import uuid4
-from django.utils.html import format_html
 from django.shortcuts import reverse
-from student.models import ProgramAndBranch, StudentProfile, ProgramEmailId,Resume
+from student.models import ProgramAndBranch, StudentProfile, ProgramEmailId, Resume
 # Create your models here.
+
 
 class CompanyProfile(models.Model):
     # Choices
@@ -40,6 +39,7 @@ class CompanyPerson(models.Model):
     designation = models.CharField(max_length=30)
     phone = models.CharField(max_length=15)
     email = models.EmailField()
+
 
 class BaseAdvertisement(models.Model):
     # validity
@@ -76,7 +76,7 @@ class BaseAdvertisement(models.Model):
     email_sent = models.BooleanField(default=False)
     creation_timestamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
-    class Meta: 
+    class Meta:
         abstract = True
 
     def __str__(self):
@@ -143,8 +143,9 @@ class InternshipOffer(BaseOffer):
 def event_pre_save_receiver(sender, instance, *args, **kwargs):
     if not instance.name:
         instance.name = instance.profile.name
-    #if instance.ppo and not instance.is_accepted:
+    # if instance.ppo and not instance.is_accepted:
     #    instance.is_accepted = True
+
 
 def event_pre_save_receiver1(sender, instance, *args, **kwargs):
     if not instance.profile:
@@ -152,12 +153,14 @@ def event_pre_save_receiver1(sender, instance, *args, **kwargs):
     if instance.ppo and not instance.is_accepted:
         instance.is_accepted = True
 
+
 pre_save.connect(event_pre_save_receiver1, sender=InternshipOffer)
+
 
 pre_save.connect(event_pre_save_receiver1, sender=JobOffer)
 
-pre_save.connect(event_pre_save_receiver, sender = CompanyProfile)
 
+pre_save.connect(event_pre_save_receiver, sender=CompanyProfile)
 
 
 def delete_user(sender, instance=None, **kwargs):
@@ -167,7 +170,6 @@ def delete_user(sender, instance=None, **kwargs):
         pass
     else:
         instance.user.delete()
-
 
 
 post_delete.connect(delete_user, sender=CompanyProfile)

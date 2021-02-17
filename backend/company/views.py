@@ -1,8 +1,7 @@
 from rest_framework.response import Response
-from .serializers import CompanyPersonSerializer, CompanyProfileSerializer, InternshipOfferSerializer, JobOfferSerializer
-from .models import CompanyProfile, CompanyPerson, InternshipAdvertisement, InternshipOffer, JobOffer, JobAdvertisement
+from .serializers import CompanyProfileSerializer, InternshipOfferSerializer, JobOfferSerializer
+from .models import CompanyProfile, InternshipOffer, JobOffer
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -21,8 +20,8 @@ class AddCompanyDetails(APIView):
         user.save()
         job_offers = data.pop('job_offers')
         internship_offers = data.pop('internship_offers')
-        profile = CompanyProfile.objects.create(user=user, **data, job_offers = JobOffer.objects.get(name = joboffers['profile']),internship_offers = InternshipOffer.objects.get(internshipoffers['profile']))
-
+        profile = CompanyProfile.objects.create(user=user, **data, job_offers=JobOffer.objects.get(name=job_offers['profile']),
+                                                internship_offers=InternshipOffer.objects.get(internship_offers['profile']))
         profile.save()
         return Response(CompanyProfileSerializer(profile).data, status=status.HTTP_200_OK)
 
@@ -50,9 +49,10 @@ class UpdateCompanyDetails(APIView):
         user.last_name = data.pop('last_name')
         user.save()
         job_offers = data.pop('job_offers')
-        intership_offers = data.pop('internship_offers')
-        h = CompanyProfile.objects.filter(user=user).update(**data, job_offers=JobOffer.objects.get(name=joboffers['profile']), internship_offers=InternshipOffer.objects.get(name=internshipoffers['profile']))
-        profile = StudentProfile.objects.filter(user=user)[0]
+        internship_offers = data.pop('internship_offers')
+        _ = CompanyProfile.objects.filter(user=user).update(**data, job_offers=JobOffer.objects.get(name=job_offers['profile']),
+                                                            internship_offers=InternshipOffer.objects.get(name=internship_offers['profile']))
+        profile = CompanyProfile.objects.filter(user=user)[0]
         profile.save()
 
         if serializer.is_valid():
@@ -99,7 +99,6 @@ class GetJoboffers(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-
 class AddInternshipoffer(APIView):
     permission_classes = (IsAuthenticated,)
     parser_classes = (MultiPartParser, FormParser,)
@@ -120,5 +119,3 @@ class GetInternshipoffers(APIView):
         internship_offers = InternshipOffer.objects.filter(company__user=request.user)
         serializer = InternshipOfferSerializer(internship_offers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-

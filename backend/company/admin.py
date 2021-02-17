@@ -1,6 +1,4 @@
 from django.contrib import admin
-from company.models import CompanyPerson, CompanyProfile, InternshipAdvertisement, InternshipOffer, JobOffer, JobAdvertisement
-from .resources import CompanyPersonResource, CompanyProfileResource, InternshipAdvertisementResource, InternshipOfferResource, JobAdvertisementResource, JobOfferResource
 from import_export.admin import ImportExportActionModelAdmin
 from django.core.mail import get_connection, EmailMultiAlternatives
 from django.conf import settings
@@ -10,7 +8,9 @@ from django.contrib import messages
 from django.shortcuts import HttpResponseRedirect
 from zipfile import ZipFile
 from os.path import basename
-
+from company.models import CompanyPerson, CompanyProfile, InternshipAdvertisement, InternshipOffer, JobOffer, JobAdvertisement
+from .resources import CompanyPersonResource, CompanyProfileResource
+from .resources import InternshipAdvertisementResource, InternshipOfferResource, JobAdvertisementResource, JobOfferResource
 
 
 class JobAdvertisementInline(admin.StackedInline):
@@ -31,7 +31,6 @@ class InternshipOfferInline(admin.StackedInline):
 
 class CompanyPersonInline(admin.StackedInline):
     model = CompanyPerson
-
 
 
 def get_zipped_resumes_for_ad(modeladmin, request, queryset):
@@ -90,7 +89,6 @@ def get_zipped_resumes(modeladmin, request, queryset):
         zip = ZipFile(zip_path, 'w')
         for offer in offers:
             zip.write(offer.resume.file.path, basename(offer.resume.file.path))
-
         zip.close()
         url = "/media/" + zip_path
         return HttpResponseRedirect(url)
@@ -189,7 +187,7 @@ class CompanyPersonAdmin(ImportExportActionModelAdmin):
 
 @admin.register(JobAdvertisement)
 class JobAdvertisementAdmin(ImportExportActionModelAdmin):
-    #change_form_template = "admin/adversiment_change_form.html"
+    # change_form_template = "admin/adversiment_change_form.html"
     readonly_fields = ['creation_timestamp', ]
     resource_class = JobAdvertisementResource
     list_display = ['company', 'designation', 'ctc', 'min_gpa', 'active', 'expiry', 'email_sent']
@@ -210,7 +208,7 @@ class JobAdvertisementAdmin(ImportExportActionModelAdmin):
 
 @admin.register(InternshipAdvertisement)
 class InternshipAdvertisementAdmin(ImportExportActionModelAdmin):
-    #change_form_template = "admin/adversiment_change_form.html"
+    # change_form_template = "admin/adversiment_change_form.html"
     readonly_fields = ['creation_timestamp', ]
     resource_class = InternshipAdvertisementResource
     list_display = ['company', 'designation', 'min_gpa', 'ctc', 'active', 'expiry', 'email_sent']

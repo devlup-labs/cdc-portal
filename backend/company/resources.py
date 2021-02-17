@@ -1,7 +1,7 @@
 from import_export import resources
 from import_export.fields import Field
 from import_export.widgets import ManyToManyWidget
-from company.models import JobOffer, InternshipOffer, JobAdvertisement, InternshipAdvertisement , BaseOffer, BaseAdvertisement
+from company.models import JobOffer, InternshipOffer, JobAdvertisement, InternshipAdvertisement
 from company.models import CompanyPerson, CompanyProfile
 from student.models import ProgramAndBranch
 
@@ -111,8 +111,6 @@ class BaseOfferResource(resources.ModelResource):
     resume_link = Field(
         column_name='Link to resume',
     )
-
-
 #    def dehydrate_resume_link(self, offer):
 #        return 'https://spc.iitj.ac.in%s' % (offer.resume.file.url)
 
