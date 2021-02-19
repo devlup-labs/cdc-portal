@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'import_export',
     'main',
-    'student'
+    'student',
+    'company',
 ]
 
 MIDDLEWARE = [
